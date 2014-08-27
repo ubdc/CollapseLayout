@@ -23,7 +23,7 @@ How to use
         
         .........
         
-</LinearLayout>
+	</LinearLayout>
 	
 </com.example.collapselayout.CollapseLayout>
 ```
