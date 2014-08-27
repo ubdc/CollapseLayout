@@ -1,0 +1,146 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FF96AA39"
+            android:gravity="center"
+            android:text="This is a demo to show the collapse/expand layout" />
+
+        <RadioGroup
+            android:id="@+id/mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/fixedTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="fixed start" />
+
+            <RadioButton
+                android:id="@+id/fixedBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fixed end" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/interpolator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RadioButton
+                android:id="@+id/bounce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="BounceInterpolator" />
+            
+            <RadioButton
+                android:id="@+id/linear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LinearInterpolator" />
+
+            <RadioButton
+                android:id="@+id/accelerate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AccelerateDecelerateInterpolator" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/orientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="vertical" />
+            
+            <RadioButton
+                android:id="@+id/horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="horizontal" />
+
+        </RadioGroup>
+        
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showEffect"
+            android:text="show me the effect"
+            android:textColor="#FF0000" />
+
+        <com.example.collapselayout.CollapseLayout
+            android:id="@+id/el"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#bdbdbd"
+                    android:gravity="center"
+                    android:text="item in collapse/expand layout" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#bdbdbd"
+                    android:gravity="center"
+                    android:text="item in collapse/expand layout" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#bdbdbd"
+                    android:gravity="center"
+                    android:text="item in collapse/expand layout" />
+            </LinearLayout>
+        </com.example.collapselayout.CollapseLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FF3F9FE0"
+            android:gravity="center"
+            android:text="other item0" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FF3F9FE0"
+            android:gravity="center"
+            android:text="other item1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FF3F9FE0"
+            android:gravity="center"
+            android:text="other item3" />
+    </LinearLayout>
+
+</ScrollView>

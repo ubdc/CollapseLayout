@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CollapseLayout">
+        <attr name="collapseOrientation">
+            <enum name="vertical" value="0" />
+            <enum name="horizontal" value="1" />
+        </attr>
+        <attr name="collapseMode">
+            <enum name="fixed_end" value="0"/>
+            <enum name="fixed_start" value="1"/>
+        </attr>
+        <attr name="initialCollapseState">
+            <enum name="open" value="0"/>
+            <enum name="close" value="1"/>
+        </attr>
+        <attr name="collapseDuration" format="integer"/>
+	</declare-styleable>
+</resources>
