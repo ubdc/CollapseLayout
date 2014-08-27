@@ -4,7 +4,7 @@ CollapseLayout can collapse/expand layout with smooth animation.
 
 Here is a gif showing the effect:
 
-![alt text](/images/demo.gif "Demo gif")
+![demo gif](/images/demo.gif "Demo gif")
 
 
 How to use
