@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.collapselayout.CollapseLayout.CollapseListener;
-import com.example.collapselayout.CollapseLayout.Mode;
+import com.example.collapselayout.CollapseLayout.CollapseMode;
 import com.example.collapselayout.CollapseLayout.Orientation;
 import com.example.expendlayout.R;
 
@@ -58,10 +58,10 @@ public class MainActivity extends Activity {
 		int modeId = modeGroup.getCheckedRadioButtonId();
 		switch (modeId) {
 		case R.id.laydown:
-			el.setCollapseMode(Mode.LayDown);
+			el.setCollapseMode(CollapseMode.LayDown);
 			break;
 		case R.id.pullout:
-			el.setCollapseMode(Mode.PullOut);
+			el.setCollapseMode(CollapseMode.PullOut);
 			break;
 		}
 		
@@ -81,19 +81,18 @@ public class MainActivity extends Activity {
 		int orientationId = orientationGroup.getCheckedRadioButtonId();
 		switch (orientationId) {
 		case R.id.vertical:
-			el.setCollapseOrientation(Orientation.VERTICAL);
+			el.setCollapseOrientation(Orientation.Vertical);
 			break;
 		case R.id.horizontal:
-			el.setCollapseOrientation(Orientation.HORIZONTAL);
+			el.setCollapseOrientation(Orientation.Horizontal);
 			break;
 		}
 		
-		int state = el.getState();
-		switch (state) {
-		case CollapseLayout.STATE_OPEN:
+		switch (el.getState()) {
+		case Open:
 			el.close();
 			break;
-		case CollapseLayout.STATE_CLOSE:
+		case Close:
 			el.open();
 			break;
 		}

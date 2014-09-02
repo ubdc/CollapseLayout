@@ -1,32 +1,28 @@
 package com.example.collapselayout;
 
-import com.example.expendlayout.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
+import com.example.expendlayout.R;
+
 public class CollapseLayout extends FrameLayout {
 	private static final Interpolator DEFAULT_INTERPOLATOR = new AccelerateDecelerateInterpolator();
 	private static final int DEFAULT_ANIM_TIME = 600;
-	private static final int STATE_NONE = 0;
-	public static final int STATE_OPEN = STATE_NONE + 1;
-	public static final int STATE_CLOSE = STATE_OPEN + 1;
-	private int state = STATE_NONE;
+	private State state;
 	private Scroller mScroller;
 	private int mMeasuredWidth;
 	private int mMeasuredHeight;
 	private Interpolator mInterpolator;
 	private int mAnimTime = DEFAULT_ANIM_TIME;
-	private Mode mMode = Mode.PullOut;
-	private Orientation mCollapseOrientation = Orientation.VERTICAL;
+	private CollapseMode mMode;
+	private Orientation mCollapseOrientation;
 	private CollapseListener mCollapseListener;
-	private boolean isStartWithClosedState;
+	private boolean mIsFirstLayout = true;
 	
 	private Runnable mVerticalAnim = new Runnable() {
 
@@ -37,7 +33,7 @@ public class CollapseLayout extends FrameLayout {
 				lp.width = mMeasuredWidth;
 				lp.height = mScroller.getCurrY();
 				setLayoutParams(lp);
-				if (mMode == Mode.PullOut) {
+				if (mMode == CollapseMode.PullOut) {
 					scrollTo(0, mMeasuredHeight - mScroller.getCurrY());
 				} else {
 					scrollTo(0, 0);
@@ -64,7 +60,7 @@ public class CollapseLayout extends FrameLayout {
 				lp.width = mScroller.getCurrX();
 				lp.height = mMeasuredHeight;
 				setLayoutParams(lp);
-				if (mMode == Mode.PullOut) {
+				if (mMode == CollapseMode.PullOut) {
 					scrollTo(mMeasuredWidth - mScroller.getCurrX(), 0);
 				} else {
 					scrollTo(0, 0);
@@ -85,22 +81,10 @@ public class CollapseLayout extends FrameLayout {
 	public CollapseLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CollapseLayout, defStyle, 0);
-		int collapseOrientation = a.getInt(R.styleable.CollapseLayout_collapseOrientation, 0);
-		if (collapseOrientation == 0) {
-			setCollapseOrientation(Orientation.VERTICAL);
-		} else {
-			setCollapseOrientation(Orientation.HORIZONTAL);
-		}
-		int collapseMode = a.getInt(R.styleable.CollapseLayout_collapseMode, 0);
-		if (collapseMode == 0) {
-			setCollapseMode(Mode.PullOut);
-		} else {
-			setCollapseMode(Mode.LayDown);
-		}
-		int initialCollapseState = a.getInt(R.styleable.CollapseLayout_initialCollapseState, 0);
-		isStartWithClosedState = (initialCollapseState != 0);
-		int collapseDuration = a.getInt(R.styleable.CollapseLayout_collapseDuration, DEFAULT_ANIM_TIME);
-		setAnimateDuration(collapseDuration);
+		setCollapseOrientation(Orientation.values()[a.getInt(R.styleable.CollapseLayout_collapseOrientation, 0)]);
+		setCollapseMode(CollapseMode.values()[a.getInt(R.styleable.CollapseLayout_collapseMode, 0)]);
+		state = State.values()[a.getInt(R.styleable.CollapseLayout_state, 0)];
+		setAnimateDuration(a.getInt(R.styleable.CollapseLayout_collapseDuration, DEFAULT_ANIM_TIME));
 		a.recycle();
 		setInterpolator(DEFAULT_INTERPOLATOR);
 		setFocusable(true);
@@ -118,13 +102,12 @@ public class CollapseLayout extends FrameLayout {
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		if (state == STATE_NONE) {
+		if (mIsFirstLayout) {
 			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 			mMeasuredWidth = getMeasuredWidth();
 			mMeasuredHeight = getMeasuredHeight();
-			
-			if (isStartWithClosedState) {
-				if (mCollapseOrientation == Orientation.HORIZONTAL) {
+			if (state == State.Close) {
+				if (mCollapseOrientation == Orientation.Horizontal) {
 					setMeasuredDimension(0, mMeasuredHeight);
 				} else {
 					setMeasuredDimension(mMeasuredWidth, 0);
@@ -134,27 +117,22 @@ public class CollapseLayout extends FrameLayout {
 			setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
 		}
 	}
-//	
-//    @Override
-//    protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed,
-//            int parentHeightMeasureSpec, int heightUsed) {
-//        final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
-//
-//        final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,
-//                getPaddingLeft() + getPaddingRight() + lp.leftMargin + lp.rightMargin
-//                        + widthUsed, lp.width);
-//        int childHeightMeasureSpec = 0;
-//        if (lp.height > 0) {
-//        	childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-//                    lp.topMargin + lp.bottomMargin + lp.height, MeasureSpec.EXACTLY);
-//        } else {
-//        	childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-//                lp.topMargin + lp.bottomMargin, MeasureSpec.UNSPECIFIED);
-//        }
-//
-//        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-//    }
-    
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+	}
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		if (!mScroller.isFinished()) {
+			mScroller.abortAnimation();
+		}
+		mIsFirstLayout = true;
+	}
+	
     public void setInterpolator(Interpolator interpolator) {
     	if (interpolator == null) {
     		interpolator = DEFAULT_INTERPOLATOR;
@@ -173,16 +151,16 @@ public class CollapseLayout extends FrameLayout {
     	mAnimTime = duration;
     }
     
-    public void setCollapseMode(Mode mode) {
+    public void setCollapseMode(CollapseMode mode) {
     	if (mode == null) {
-    		mode = Mode.PullOut;
+    		mode = CollapseMode.PullOut;
     	}
     	mMode = mode;
     }
     
     public void setCollapseOrientation(Orientation orientation) {
     	if (orientation == null) {
-    		orientation = Orientation.VERTICAL;
+    		orientation = Orientation.Vertical;
     	}
     	mCollapseOrientation = orientation;
     }
@@ -191,24 +169,26 @@ public class CollapseLayout extends FrameLayout {
     	mCollapseListener = listener;
     }
     
-    public int getState() {
-    	if (isStartWithClosedState) {
-    		return STATE_CLOSE;
-    	} else {
-    		if (state == STATE_NONE) {
-    			return STATE_OPEN;
-    		} else {
-    			return state;
-    		}
-    	}
+    public State getState() {
+		return state;
 	}
     
+    public void setState(State state) {
+    	if (state == null || this.state == state) {
+    		return;
+    	}
+    	this.state = state;
+    	mIsFirstLayout = true;
+    	requestLayout();
+    }
+    
 	public void close() {
+		mIsFirstLayout = false;
 		switch (mCollapseOrientation) {
-		case VERTICAL:
+		case Vertical:
 			verticalClose();
 			break;
-		case HORIZONTAL:
+		case Horizontal:
 			horizontalClose();
 			break;
 		}
@@ -216,10 +196,10 @@ public class CollapseLayout extends FrameLayout {
 	
 	private void verticalClose() {
 		if (mMeasuredHeight > 0) {
-			if (getState() == STATE_CLOSE) {
+			if (state == State.Close) {
 				return;
 			}
-			state = STATE_CLOSE;
+			state = State.Close;
 			if (mScroller.isFinished()) {
 				mScroller.startScroll(0, mMeasuredHeight, 0, -mMeasuredHeight, mAnimTime);
 			} else {
@@ -234,10 +214,10 @@ public class CollapseLayout extends FrameLayout {
 	
 	private void horizontalClose() {
 		if (mMeasuredWidth > 0) {
-			if (getState() == STATE_CLOSE) {
+			if (state == State.Close) {
 				return;
 			}
-			state = STATE_CLOSE;
+			state = State.Close;
 			if (mScroller.isFinished()) {
 				mScroller.startScroll(mMeasuredWidth, 0, -mMeasuredWidth, 0, mAnimTime);
 			} else {
@@ -251,15 +231,12 @@ public class CollapseLayout extends FrameLayout {
 	}
 	
 	public void open() {
-		if (isStartWithClosedState) {
-			isStartWithClosedState = false;
-			state = STATE_CLOSE;
-		}
+		mIsFirstLayout = false;
 		switch (mCollapseOrientation) {
-		case VERTICAL:
+		case Vertical:
 			verticalOpen();
 			break;
-		case HORIZONTAL:
+		case Horizontal:
 			horizontalOpen();
 			break;
 		}
@@ -267,10 +244,10 @@ public class CollapseLayout extends FrameLayout {
 	
 	private void verticalOpen() {
 		if (mMeasuredHeight > 0) {
-			if (getState() == STATE_OPEN) {
+			if (state == State.Open) {
 				return;
 			}
-			state = STATE_OPEN;
+			state = State.Open;
 			if (mScroller.isFinished()) {
 				mScroller.startScroll(0, 0, 0, mMeasuredHeight, mAnimTime);
 			} else {
@@ -285,10 +262,10 @@ public class CollapseLayout extends FrameLayout {
 	
 	private void horizontalOpen() {
 		if (mMeasuredWidth > 0) {
-			if (getState() == STATE_OPEN) {
+			if (state == State.Open) {
 				return;
 			}
-			state = STATE_OPEN;
+			state = State.Open;
 			if (mScroller.isFinished()) {
 				mScroller.startScroll(0, 0, mMeasuredWidth, 0, mAnimTime);
 			} else {
@@ -306,14 +283,19 @@ public class CollapseLayout extends FrameLayout {
 		removeCallbacks(mVerticalAnim);
 	}
 	
-	public enum Mode {
-		LayDown,
-		PullOut
+	public enum CollapseMode {
+		PullOut,
+		LayDown;
 	}
 	
 	public enum Orientation {
-		HORIZONTAL,
-		VERTICAL
+		Vertical,
+		Horizontal;
+	}
+	
+	public enum State {
+		Open,
+		Close;
 	}
 	
 	public interface CollapseListener {

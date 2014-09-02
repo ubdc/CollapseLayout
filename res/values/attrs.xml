@@ -6,10 +6,10 @@
             <enum name="horizontal" value="1" />
         </attr>
         <attr name="collapseMode">
-            <enum name="fixed_end" value="0"/>
-            <enum name="fixed_start" value="1"/>
+            <enum name="pullout" value="0"/>
+            <enum name="laydown" value="1"/>
         </attr>
-        <attr name="initialCollapseState">
+        <attr name="state">
             <enum name="open" value="0"/>
             <enum name="close" value="1"/>
         </attr>
