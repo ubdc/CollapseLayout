@@ -57,11 +57,11 @@ public class MainActivity extends Activity {
 	public void showEffect(View v) {
 		int modeId = modeGroup.getCheckedRadioButtonId();
 		switch (modeId) {
-		case R.id.fixedTop:
-			el.setCollapseMode(Mode.FIXED_START);
+		case R.id.laydown:
+			el.setCollapseMode(Mode.LayDown);
 			break;
-		case R.id.fixedBottom:
-			el.setCollapseMode(Mode.FIXED_END);
+		case R.id.pullout:
+			el.setCollapseMode(Mode.PullOut);
 			break;
 		}
 		

@@ -23,7 +23,7 @@ public class CollapseLayout extends FrameLayout {
 	private int mMeasuredHeight;
 	private Interpolator mInterpolator;
 	private int mAnimTime = DEFAULT_ANIM_TIME;
-	private Mode mMode = Mode.FIXED_END;
+	private Mode mMode = Mode.PullOut;
 	private Orientation mCollapseOrientation = Orientation.VERTICAL;
 	private CollapseListener mCollapseListener;
 	private boolean isStartWithClosedState;
@@ -37,7 +37,7 @@ public class CollapseLayout extends FrameLayout {
 				lp.width = mMeasuredWidth;
 				lp.height = mScroller.getCurrY();
 				setLayoutParams(lp);
-				if (mMode == Mode.FIXED_END) {
+				if (mMode == Mode.PullOut) {
 					scrollTo(0, mMeasuredHeight - mScroller.getCurrY());
 				} else {
 					scrollTo(0, 0);
@@ -64,7 +64,7 @@ public class CollapseLayout extends FrameLayout {
 				lp.width = mScroller.getCurrX();
 				lp.height = mMeasuredHeight;
 				setLayoutParams(lp);
-				if (mMode == Mode.FIXED_END) {
+				if (mMode == Mode.PullOut) {
 					scrollTo(mMeasuredWidth - mScroller.getCurrX(), 0);
 				} else {
 					scrollTo(0, 0);
@@ -93,9 +93,9 @@ public class CollapseLayout extends FrameLayout {
 		}
 		int collapseMode = a.getInt(R.styleable.CollapseLayout_collapseMode, 0);
 		if (collapseMode == 0) {
-			setCollapseMode(Mode.FIXED_END);
+			setCollapseMode(Mode.PullOut);
 		} else {
-			setCollapseMode(Mode.FIXED_START);
+			setCollapseMode(Mode.LayDown);
 		}
 		int initialCollapseState = a.getInt(R.styleable.CollapseLayout_initialCollapseState, 0);
 		isStartWithClosedState = (initialCollapseState != 0);
@@ -175,7 +175,7 @@ public class CollapseLayout extends FrameLayout {
     
     public void setCollapseMode(Mode mode) {
     	if (mode == null) {
-    		mode = Mode.FIXED_END;
+    		mode = Mode.PullOut;
     	}
     	mMode = mode;
     }
@@ -307,8 +307,8 @@ public class CollapseLayout extends FrameLayout {
 	}
 	
 	public enum Mode {
-		FIXED_START,
-		FIXED_END
+		LayDown,
+		PullOut
 	}
 	
 	public enum Orientation {

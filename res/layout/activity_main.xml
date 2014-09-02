@@ -21,17 +21,17 @@
             android:orientation="horizontal" >
 
             <RadioButton
-                android:id="@+id/fixedTop"
+                android:id="@+id/laydown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="fixed start" />
+                android:text="LayDown" />
 
             <RadioButton
-                android:id="@+id/fixedBottom"
+                android:id="@+id/pullout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="fixed end" />
+                android:text="PullOut" />
         </RadioGroup>
 
         <RadioGroup
