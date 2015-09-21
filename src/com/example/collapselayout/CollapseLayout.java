@@ -114,7 +114,7 @@ public class CollapseLayout extends FrameLayout {
 				}
 			}
 		} else {
-			setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+			setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
 		}
 	}
 	
